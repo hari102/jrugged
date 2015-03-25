@@ -16,7 +16,15 @@
  */
 package org.fishwife.jrugged;
 
+import com.sun.deploy.net.BasicHttpRequest;
+import com.sun.deploy.net.HttpRequest;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
 
 import static org.junit.Assert.assertEquals;
 
@@ -61,11 +69,31 @@ public class TestPerformanceMonitor {
     @Test
     public void testRunnableWithResultReturnsResultOnSuccess() throws Exception {
         PerformanceMonitor perfMon = new PerformanceMonitor();
-        Integer returnResult = 21;
 
-        Integer callResult = perfMon.invoke(new ConstantSuccessPerformer(5), returnResult);
+        Integer returnResult = 5000;
 
-        assertEquals(returnResult, callResult);
+        perfMon.invoke(new ConstantSuccessPerformer(50000));
+
+        perfMon.invoke(new ConstantSuccessPerformer(500));
+
+
+        perfMon.invoke(new ConstantSuccessPerformer(50000));
+
+        perfMon.invoke(new ConstantSuccessPerformer(500));
+
+
+        perfMon.invoke(new ConstantSuccessPerformer(50000));
+
+        perfMon.invoke(new ConstantSuccessPerformer(500));
+
+
+        System.out.println(perfMon.get99thPercentileSuccessLatencyLastDay());
+
+        System.out.println(perfMon.get95thPercentileSuccessLatencyLastDay());
+
+
+
+       // assertEquals(returnResult, callResult);
     }
 
     @Test(expected=Exception.class)
@@ -85,8 +113,21 @@ public class TestPerformanceMonitor {
         }
 
         public void run() {
+            int count = 0;
             for (long i = 0; i < _totalNumberOfTimesToLoop; i++) {
-
+                try {
+                    URL url = new URL("http://www.google.com/search?q=hello");
+                    try {
+                        url.openConnection();
+                        count = count + 1;
+                    }
+                    catch (IOException e){
+                        System.out.println("bad io");
+                    }
+                }
+                catch (MalformedURLException m){
+                    System.out.println("Bad url");
+                }
             }
         }
     }

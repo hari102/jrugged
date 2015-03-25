@@ -210,19 +210,6 @@ public class TestStatisticallyBalancedSampledQuantile {
 	    assertEquals(2L, impl.getPercentile(50, t1));
 	}
 
-    @Test
-    public void breakStuff() {
-        long t0 = System.currentTimeMillis();
-        impl = new StatisticallyBalancedSampledQuantile(100, 60L, TimeUnit.SECONDS, t0, true);
-        for(int t=0; t<30 * 1000; t++) {
-            impl.addSample(30000 - t, t0 + t);
-        }
-
-        long t1 = t0 + 30 * 1000L;
-        System.out.println(impl.getPercentile(50, t1));
-        //assertTrue(impl.getPercentile(50, t1) > 15000 && impl.getPercentile(15000, t1) < );
-        assertTrue(true);
-    }
 
 
 
