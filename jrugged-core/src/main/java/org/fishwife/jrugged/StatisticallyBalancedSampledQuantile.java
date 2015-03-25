@@ -27,8 +27,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * taken across the instance's lifetime, but a window can be
  * configured to keep samples across just across that trailing
  * time span (for example, getting a quantile across the last
- * minute). We let the user specify the amount of memory they want the sample quantile to take up.
- * We use an algorithm that keeps a fixed maximum number
+ * minute). We let the user specify the amount of memory they want the sample
+ * quantile to take up.We use an algorithm that keeps a fixed maximum number
  * of samples that selects uniformly from all reported samples so
  * far (thus representing a statistically appropriate sampling
  * of the entire population). For the windowed version, we keep
@@ -63,17 +63,20 @@ public class StatisticallyBalancedSampledQuantile {
 
     /**
      * Creates a <code>SampleQuantile</code> that keeps a
-     * given maximum number of samples across its lifetime.
+     * given maximum number of samples based off a memory constraint
+     * across its lifetime.
      *
-     * @param max_Mem the maximum number of memory in kilobytes to allocate to samples
+     * @param max_Mem the maximum number of memory in kilobytes to allocate
+     * to samples. Each kilobyte holding a 125 pieces of data
      */
+
     public StatisticallyBalancedSampledQuantile(int max_Mem, boolean balance) {
+
         statisticalBalance = balance;
         if (statisticalBalance) {
             this.maxSamples = max_Mem * 125;
         }
         else{
-            //how to properly use with feature flag?
             maxSamples = 200;
         }
 
@@ -81,8 +84,8 @@ public class StatisticallyBalancedSampledQuantile {
 
     /**
      * Creates a <code>SampleQuantile</code> that keeps a
-     * default number of samples across the specified time
-     * window.
+     * default number of samples based off a memory constraint
+     * across the specified time window.
      *
      * @param windowLength size of time window to hold onto samples
      * @param units indication of what time units windowLength is specified in
@@ -93,8 +96,8 @@ public class StatisticallyBalancedSampledQuantile {
 
     /**
      * Creates a <code>SampleQuantile</code> that keeps a
-     * given maximum number of samples across the specified time
-     * window.
+     * given maximum number of samples based off a memory constraint
+     * across the specified time window.
      *
      * @param max_Mem the maximum number of samples to keep inside of windowLength
      * @param windowLength size of time window to hold onto samples
